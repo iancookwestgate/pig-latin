@@ -1,82 +1,106 @@
-
 var pig = [];
-var b = 0;
+var a = 0;
 
-function scramble(string, position) {
-  var pos = [];
-  var i = 0;
-  var e = 0;
-  if(position == -1) {
-    string = string + "ay";
-  }
-  if(position == 0) {
-    string = string + "way"
-  }
-  if(position > 0) {
-    var sendToBack  = string.slice(0, position)
-    var arr = string.split(" ");
-    var length = arr.length;
-    while(i < position) {
-      i = i + 1;
-    }
-    e = e + 1;
-    var back = string.slice(0, i);
-    var front = string.slice(e, string.length);
-    string = front + back;
-    alert(position);
-    string = string + "ay";
-  }
 
-console.log(string);
+
+
+
+function scrambleFirst(string) {
+  string = string + "way";
   return string;
 
 
 
 }
 
+function noVowel(string) {
+  string = string + "ay";
+  return string;
+}
+
+function scramble(string, position) {
+  var back = string.slice(0, position)
+  var front = string.slice(position, string.length)
+  string = front + back + "ay";
+  return string;
+
+}
+
+
+function scrambleNumber(string) {
+  return string;
+}
 
 $(document).ready(function() {
 
   $("#form").submit(function(event) {
+
     var pigLatinInput = $("input#pigLatin").val();
 
     var words = pigLatinInput.split(" ");
     var wordsLength = words.length;
-    var vowels = ["A", "E", "I", "O", "U", "a", "e", "i", "o", "u"];
+    var position = 0;
     words.forEach(function(word) {
-      var wordLength = word.length;
-      var letters = [];
-      var newWord = "";
-      for (var j = 0; j < wordLength; j++) {
-        letters[j] = word.charAt(j);
-      }
-      lettersLength = letters.length;
+      var letters = word;
+      position = 0;
       mainLoop: {
-        for (var j = 0; j < lettersLength; j = j + 1) {
-          for(var a = 0; a < vowels.length; a = a + 1) {
-            var i = 0;
 
-            if (letters[j] == vowels[a]) {
-              newWord = scramble(word, i);
-              pig[b] = newWord
-              b = b + 1;
+        for(var b = 0; b < letters.length; b = b + 1) {
+          var firstLetter = letters[0];
+          var vowels = ["A", "E", "I", "O", "U", "a", "e", "i", "o", "u"];
+          var numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+          var c = 0
+          for(var d = 0; d < vowels.length; d = d + 1) {
+            if(firstLetter == vowels[d]) {
+              var string = word.toString();
+              var newWord = scrambleFirst(word);
+              pig[a] = newWord;
+              a = a + 1;
               break mainLoop;
             }
-            i = i + 1;
+            if(letters[b] == numbers[c]) {
+              var newWord = scrambleNumber(word);
+              pig[a] = newWord;
+              a = a + 1;
+              break mainLoop;
+            }
+
+            if(letters[b] == vowels[d]) {
+
+              var newWord = scramble(word, position);
+              pig[a] = newWord;
+              a = a + 1;
+              break mainLoop;
+            }
+
+            c = c + 1;
+
           }
+
+
+          position = position + 1;
+
+
         }
-      }
-    });
+        if(vowels.length == 10) {
+          var newWord = noVowel(word);
+          pig[a] = newWord;
+          a = a + 1;
+          break mainLoop;
 
-
-    alert(pig);
-    var c = 0;
-    var newSentence = pig.toString();
-    while (c < newSentence.length) {
-      newSentence = newSentence.replace(",", " ")
-      c = c + 1;
+        }
     }
 
+
+
+    });
+
+    var newSentence = pig.toString();
+    var l = 0;
+    while (l < newSentence.length) {
+      newSentence = newSentence.replace(",", " ")
+      l = l + 1;
+    }
     $(".pigLatin").text(newSentence);
 
 
